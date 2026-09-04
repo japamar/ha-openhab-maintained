@@ -1,0 +1,13 @@
+{
+  "name": "openHAB",
+  "domains": [
+    "binary_sensor",
+    "cover",
+    "device_tracker",
+    "light",
+    "media_player",
+    "sensor",
+    "switch"
+  ],
+  "homeassistant": "2026.1.0"
+}
