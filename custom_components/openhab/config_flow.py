@@ -14,8 +14,8 @@ from .const import (
     CONF_AUTH_TYPE_BASIC,
     CONF_AUTH_TYPE_TOKEN,
     CONF_BASE_URL,
-    CONF_EXCLUDED_ITEM_PREFIXES,
     CONF_EXCLUDED_ITEM_NAMES,
+    CONF_EXCLUDED_ITEM_PREFIXES,
     CONF_PASSWORD,
     CONF_USERNAME,
     DOMAIN,
@@ -44,8 +44,7 @@ class OpenHABFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             self.data = user_input
             return await self.async_step_credentials(user_input)
 
-        if user_input is None:
-            user_input = {}
+        user_input = {}
 
         return self.async_show_form(
             step_id="user",
@@ -68,15 +67,14 @@ class OpenHABFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self,
         user_input: dict[str, str] | None = None,
     ):
-        """Handle a flow initialized by the user."""
+        """Handle credential entry."""
         errors = {}
+        user_input = user_input or {}
 
         user_input[CONF_BASE_URL] = self.data[CONF_BASE_URL]
         user_input[CONF_AUTH_TYPE] = self.data[CONF_AUTH_TYPE]
 
-        if user_input is not None and (
-            CONF_AUTH_TOKEN in user_input or CONF_USERNAME in user_input
-        ):
+        if CONF_AUTH_TOKEN in user_input or CONF_USERNAME in user_input:
             if await self._test_credentials(
                 user_input[CONF_BASE_URL],
                 user_input[CONF_AUTH_TYPE],
@@ -85,27 +83,28 @@ class OpenHABFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 user_input.get(CONF_PASSWORD, ""),
             ):
                 return self.async_create_entry(
-                    title=strip_ip(user_input[CONF_BASE_URL]), data=user_input
+                    title=strip_ip(user_input[CONF_BASE_URL]),
+                    data=user_input,
                 )
             errors["base"] = "auth"
-
-        if user_input is None:
-            user_input = {}
 
         if user_input[CONF_AUTH_TYPE] == CONF_AUTH_TYPE_BASIC:
             schema = {
                 vol.Optional(
-                    CONF_USERNAME, default=user_input.get(CONF_USERNAME, "")
+                    CONF_USERNAME,
+                    default=user_input.get(CONF_USERNAME, ""),
                 ): cv.string,
                 vol.Optional(
-                    CONF_PASSWORD, default=user_input.get(CONF_PASSWORD, "")
+                    CONF_PASSWORD,
+                    default=user_input.get(CONF_PASSWORD, ""),
                 ): cv.string,
             }
-        elif user_input[CONF_AUTH_TYPE] == CONF_AUTH_TYPE_TOKEN:
+        else:
             schema = {
                 vol.Required(
-                    CONF_AUTH_TOKEN, default=user_input.get(CONF_AUTH_TOKEN, "")
-                ): cv.string,  # cv.matches_regex(r"^(oh)\.(.+)\.(.+)$"),
+                    CONF_AUTH_TOKEN,
+                    default=user_input.get(CONF_AUTH_TOKEN, ""),
+                ): cv.string,
             }
 
         return self.async_show_form(
@@ -116,10 +115,12 @@ class OpenHABFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: config_entries.ConfigEntry):
-        return OpenHABOptionsFlowHandler(config_entry)
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Create the options flow."""
+        return OpenHABOptionsFlowHandler()
 
-    # pylint: disable=R0913
     async def _test_credentials(
         self,
         base_url: str,
@@ -128,57 +129,47 @@ class OpenHABFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         username: str,
         password: str,
     ):
-        """Return true if credentials is valid."""
-        try:
-            client = OpenHABApiClient(
-                self.hass, base_url, auth_type, auth_token, username, password
-            )  # pylint: disable=broad-except
-            await client.async_get_version()
-            return True
-        except Exception as error:  # pylint: disable=broad-except
-            raise error
-        return False
+        """Return true if credentials are valid."""
+        client = OpenHABApiClient(
+            self.hass,
+            base_url,
+            auth_type,
+            auth_token,
+            username,
+            password,
+        )
+        await client.async_get_version()
+        return True
 
 
-class OpenHABOptionsFlowHandler(config_entries.OptionsFlow):
-    """openHAB config flow options handler."""
+class OpenHABOptionsFlowHandler(config_entries.OptionsFlowWithReload):
+    """openHAB options flow handler."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry):
-        """Initialize HACS options flow."""
-        self.config_entry = config_entry
-        self.options = dict(config_entry.options)
-
-    async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
+    async def async_step_init(self, user_input=None):
         """Manage the options."""
-        return await self.async_step_user()
-
-    async def async_step_user(self, user_input=None):
-        """Handle a flow initialized by the user."""
         if user_input is not None:
-            self.options.update(user_input)
-            return self.async_create_entry(
-                title=strip_ip(self.config_entry.data.get(CONF_BASE_URL)),
-                data=self.options,
-            )
+            return self.async_create_entry(data=user_input)
+
+        current = dict(self.config_entry.options)
 
         schema = {
-            vol.Required(x, default=self.options.get(x, True)): bool
+            vol.Required(x, default=current.get(x, True)): bool
             for x in sorted(PLATFORMS)
         }
         schema[
             vol.Optional(
                 CONF_EXCLUDED_ITEM_PREFIXES,
-                default=self.options.get(CONF_EXCLUDED_ITEM_PREFIXES, ""),
+                default=current.get(CONF_EXCLUDED_ITEM_PREFIXES, ""),
             )
         ] = cv.string
         schema[
             vol.Optional(
                 CONF_EXCLUDED_ITEM_NAMES,
-                default=self.options.get(CONF_EXCLUDED_ITEM_NAMES, ""),
+                default=current.get(CONF_EXCLUDED_ITEM_NAMES, ""),
             )
         ] = cv.string
 
         return self.async_show_form(
-            step_id="user",
+            step_id="init",
             data_schema=vol.Schema(schema),
         )
