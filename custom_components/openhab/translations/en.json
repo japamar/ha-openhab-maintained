@@ -35,7 +35,8 @@
           "media_player": "Media Player entities (Player items) enabled",
           "sensor": "Sensor entities (DateTime, Number, String items) enabled",
           "switch": "Switch entities (Switch items) enabled",
-          "excluded_item_prefixes": "Item prefixes to disable by default (comma-separated)"
+          "excluded_item_prefixes": "Item prefixes to disable by default (comma-separated)",
+          "excluded_item_names": "Exact item names to disable by default (comma-separated)"
         }
       }
     }
