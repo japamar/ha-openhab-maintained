@@ -49,7 +49,8 @@ class OpenHABEntity(CoordinatorEntity):
     def entity_registry_enabled_default(self) -> bool:
         """Disable configured noisy/helper items by default when first registered."""
         prefixes = getattr(self.coordinator, "excluded_item_prefixes", ())
-        return not item_is_excluded(self.item.name, prefixes)
+        names = getattr(self.coordinator, "excluded_item_names", ())
+        return not item_is_excluded(self.item.name, prefixes, names)
 
     @property
     def available(self):
