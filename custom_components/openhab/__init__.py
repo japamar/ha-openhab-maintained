@@ -5,7 +5,7 @@ Maintained fork:
 https://github.com/japamar/ha-openhab-maintained
 """
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
 
 from .api import OpenHABApiClient
 from .const import (
@@ -19,7 +19,29 @@ from .const import (
     PLATFORMS,
     STARTUP_MESSAGE,
 )
-from .coordinator import OpenHABDataUpdateCoordinator\nfrom .filtering import prefixes_from_options
+from .coordinator import OpenHABDataUpdateCoordinator
+from .filtering import prefixes_from_options
+from .registry import async_disable_filtered_entities
+
+
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Set up integration-level services."""
+
+    async def handle_disable_filtered_entities(call: ServiceCall) -> None:
+        """Disable already-registered entities matching configured prefixes."""
+        total = 0
+        for config_entry in hass.config_entries.async_entries(DOMAIN):
+            total += await async_disable_filtered_entities(hass, config_entry)
+        LOGGER.info("openHAB filter migration disabled %s entities in total", total)
+
+    if not hass.services.has_service(DOMAIN, "disable_filtered_entities"):
+        hass.services.async_register(
+            DOMAIN,
+            "disable_filtered_entities",
+            handle_disable_filtered_entities,
+        )
+
+    return True
 
 
 async def async_setup_entry(
@@ -40,24 +62,20 @@ async def async_setup_entry(
     )
 
     coordinator = OpenHABDataUpdateCoordinator(hass, api=api_client)
+    coordinator.excluded_item_prefixes = prefixes_from_options(entry.options)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
     enabled_platforms = []
-
     for platform in PLATFORMS:
         if entry.options.get(platform, True):
             coordinator.platforms.append(platform)
             enabled_platforms.append(platform)
 
-    await hass.config_entries.async_forward_entry_setups(
-        entry,
-        enabled_platforms,
-    )
+    await hass.config_entries.async_forward_entry_setups(entry, enabled_platforms)
 
     entry.add_update_listener(async_reload_entry)
-
     return True
 
 
