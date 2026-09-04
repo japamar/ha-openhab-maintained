@@ -15,6 +15,7 @@ from .const import (
     CONF_AUTH_TYPE_TOKEN,
     CONF_BASE_URL,
     CONF_EXCLUDED_ITEM_PREFIXES,
+    CONF_EXCLUDED_ITEM_NAMES,
     CONF_PASSWORD,
     CONF_USERNAME,
     DOMAIN,
@@ -168,6 +169,12 @@ class OpenHABOptionsFlowHandler(config_entries.OptionsFlow):
             vol.Optional(
                 CONF_EXCLUDED_ITEM_PREFIXES,
                 default=self.options.get(CONF_EXCLUDED_ITEM_PREFIXES, ""),
+            )
+        ] = cv.string
+        schema[
+            vol.Optional(
+                CONF_EXCLUDED_ITEM_NAMES,
+                default=self.options.get(CONF_EXCLUDED_ITEM_NAMES, ""),
             )
         ] = cv.string
 
