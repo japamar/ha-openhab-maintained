@@ -20,7 +20,7 @@ from .const import (
     STARTUP_MESSAGE,
 )
 from .coordinator import OpenHABDataUpdateCoordinator
-from .filtering import prefixes_from_options
+from .filtering import names_from_options, prefixes_from_options
 from .registry import async_disable_filtered_entities
 
 
@@ -63,6 +63,7 @@ async def async_setup_entry(
 
     coordinator = OpenHABDataUpdateCoordinator(hass, api=api_client)
     coordinator.excluded_item_prefixes = prefixes_from_options(entry.options)
+    coordinator.excluded_item_names = names_from_options(entry.options)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
