@@ -19,7 +19,7 @@ from .const import (
     PLATFORMS,
     STARTUP_MESSAGE,
 )
-from .coordinator import OpenHABDataUpdateCoordinator
+from .coordinator import OpenHABDataUpdateCoordinator\nfrom .filtering import prefixes_from_options
 
 
 async def async_setup_entry(
