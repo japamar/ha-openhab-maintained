@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
 from .const import CONF_BASE_URL, DOMAIN, LOGGER
-from .filtering import prefixes_from_options
+from .filtering import item_is_excluded, names_from_options, prefixes_from_options
 from .utils import strip_ip
 
 
@@ -20,7 +20,8 @@ async def async_disable_filtered_entities(
     User-disabled entities and entities from other integrations are untouched.
     """
     prefixes = prefixes_from_options(entry.options)
-    if not prefixes:
+    names = names_from_options(entry.options)
+    if not prefixes and not names:
         return 0
 
     registry = er.async_get(hass)
@@ -34,7 +35,7 @@ async def async_disable_filtered_entities(
             continue
 
         item_name = unique_id[len(unique_id_prefix):]
-        if not any(item_name.startswith(prefix) for prefix in prefixes):
+        if not item_is_excluded(item_name, prefixes, names):
             continue
 
         if registry_entry.disabled_by is not None:
