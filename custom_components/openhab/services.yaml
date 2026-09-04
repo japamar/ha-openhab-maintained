@@ -1,3 +1,6 @@
-# send_command
-# update_item
-# trigger_rule
+disable_filtered_entities:
+  name: Disable filtered entities
+  description: >-
+    Disable existing openHAB entities whose item names match the prefixes
+    configured in the integration options. Entities already disabled by the
+    user are left untouched.
