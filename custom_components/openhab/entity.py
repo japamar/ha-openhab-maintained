@@ -45,6 +45,12 @@ class OpenHABEntity(CoordinatorEntity):
             self._attr_native_unit_of_measurement = str(self.item.unit_of_measure)
 
     @property
+    def entity_registry_enabled_default(self) -> bool:
+        """Disable configured noisy/helper items by default when first registered."""
+        prefixes = getattr(self.coordinator, "excluded_item_prefixes", ())
+        return not item_is_excluded(self.item.name, prefixes)
+
+    @property
     def available(self):
         """Return True if entity is available."""
         return self.coordinator.is_online
