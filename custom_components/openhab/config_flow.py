@@ -13,7 +13,7 @@ from .const import (
     CONF_AUTH_TYPE,
     CONF_AUTH_TYPE_BASIC,
     CONF_AUTH_TYPE_TOKEN,
-    CONF_BASE_URL,
+    CONF_BASE_URL,\n    CONF_EXCLUDED_ITEM_PREFIXES,
     CONF_PASSWORD,
     CONF_USERNAME,
     DOMAIN,
@@ -159,12 +159,18 @@ class OpenHABOptionsFlowHandler(config_entries.OptionsFlow):
                 data=self.options,
             )
 
+        schema = {
+            vol.Required(x, default=self.options.get(x, True)): bool
+            for x in sorted(PLATFORMS)
+        }
+        schema[
+            vol.Optional(
+                CONF_EXCLUDED_ITEM_PREFIXES,
+                default=self.options.get(CONF_EXCLUDED_ITEM_PREFIXES, ""),
+            )
+        ] = cv.string
+
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
-                }
-            ),
+            data_schema=vol.Schema(schema),
         )
