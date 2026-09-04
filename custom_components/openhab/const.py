@@ -5,7 +5,7 @@ from logging import Logger, getLogger
 NAME = "openHAB"
 DOMAIN = "openhab"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 ATTRIBUTION = "Data provided by openHAB REST API"
 ISSUE_URL = "https://github.com/japamar/ha-openhab-maintained/issues"
 DATA_COORDINATOR_UPDATE_INTERVAL = timedelta(seconds=15)
@@ -28,7 +28,7 @@ CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_AUTH_TOKEN = "auth_token"
 CONF_AUTH_TYPE_BASIC = "basic"
-CONF_AUTH_TYPE_TOKEN = "token"
+CONF_AUTH_TYPE_TOKEN = "token"\nCONF_EXCLUDED_ITEM_PREFIXES = "excluded_item_prefixes"
 
 AUTH_TYPES = [CONF_AUTH_TYPE_BASIC, CONF_AUTH_TYPE_TOKEN]
 DEFAULT_NAME = DOMAIN
