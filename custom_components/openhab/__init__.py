@@ -75,8 +75,6 @@ async def async_setup_entry(
             enabled_platforms.append(platform)
 
     await hass.config_entries.async_forward_entry_setups(entry, enabled_platforms)
-
-    entry.add_update_listener(async_reload_entry)
     return True
 
 
