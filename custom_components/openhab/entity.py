@@ -9,7 +9,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from openhab import items
 
 from .const import ATTRIBUTION, DOMAIN, NAME, VERSION
-from .coordinator import OpenHABDataUpdateCoordinator
+from .coordinator import OpenHABDataUpdateCoordinator\nfrom .filtering import item_is_excluded
 from .icons_map import ICONS_MAP, ITEM_TYPE_MAP
 from .utils import strip_ip
 
