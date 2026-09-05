@@ -17,9 +17,16 @@ Compatibility changes currently include:
 - fixes for blocking/synchronous openHAB calls used from Home Assistant async code
 - corrected dimmer brightness conversion
 
-Version 0.2.0 adds configurable filtering for noisy/helper openHAB items. In the integration options, `excluded_item_prefixes` accepts a comma-separated list of item-name prefixes. Matching new entities are disabled by default.
+Version 0.2.1 adds configurable filtering for noisy/helper openHAB Items.
 
-For installations that already contain matching entities, call the `openhab.disable_filtered_entities` action once after configuring the prefixes. The action only changes currently enabled entities belonging to the openHAB config entry; entities already disabled by the user are left untouched.
+In **Settings → Devices & services → openHAB → Options**, you can configure:
+
+- **Item name prefixes to disable**: comma-separated prefixes such as `nl_, nt_, nc_`
+- **Exact Item names to disable**: comma-separated exact names such as `ndim, ncurtin, nhvac`
+
+Whitespace is ignored and duplicate values are removed automatically. When you press **Submit**, the integration immediately applies the changed filters to entities already present in the Home Assistant entity registry and reloads the integration automatically.
+
+If a previously configured filter is removed, entities disabled by that filter are re-enabled automatically. The manual `openhab.disable_filtered_entities` action remains available only as an advanced recovery tool.
 
 ## Installation with HACS
 
