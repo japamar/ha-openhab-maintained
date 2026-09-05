@@ -5,7 +5,7 @@ from logging import Logger, getLogger
 NAME = "openHAB"
 DOMAIN = "openhab"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 ATTRIBUTION = "Data provided by openHAB REST API"
 ISSUE_URL = "https://github.com/japamar/ha-openhab-maintained/issues"
 DATA_COORDINATOR_UPDATE_INTERVAL = timedelta(seconds=15)
