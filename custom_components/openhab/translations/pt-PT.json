@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "openHAB",
+        "description": "Integração mantida: https://github.com/japamar/ha-openhab-maintained",
+        "data": {
+          "base_url": "URL base",
+          "auth_type": "Tipo de autenticação"
+        }
+      },
+      "credentials": {
+        "title": "openHAB",
+        "description": "Como gerar um API Token: https://www.openhab.org/docs/configuration/apitokens.html",
+        "data": {
+          "username": "Utilizador",
+          "password": "Palavra-passe",
+          "auth_token": "API Token"
+        }
+      }
+    },
+    "error": {
+      "auth": "Utilizador/palavra-passe ou API token inválido."
+    },
+    "abort": {}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções de entidades e plataformas",
+        "description": "Escolha as plataformas openHAB a utilizar. Pode também desativar Items auxiliares ou que não pretende importar. As alterações aos filtros são aplicadas automaticamente ao carregar em Enviar.",
+        "data": {
+          "binary_sensor": "Ativar sensores binários (Items Contact)",
+          "cover": "Ativar estores/cortinas (Items Rollershutter)",
+          "device_tracker": "Ativar localizadores (Items Location)",
+          "light": "Ativar luzes (Items Color e Dimmer)",
+          "media_player": "Ativar leitores multimédia (Items Player)",
+          "sensor": "Ativar sensores (Items DateTime, Number e String)",
+          "switch": "Ativar interruptores (Items Switch)",
+          "excluded_item_prefixes": "Prefixos dos nomes de Items a desativar",
+          "excluded_item_names": "Nomes exatos de Items a desativar"
+        },
+        "data_description": {
+          "excluded_item_prefixes": "Introduza um ou mais prefixos separados por vírgulas. Todos os Items openHAB cujo nome comece por um destes valores serão desativados no Home Assistant. Exemplo: nl_, nt_, nc_",
+          "excluded_item_names": "Introduza um ou mais nomes exatos de Items separados por vírgulas. Apenas os Items openHAB com exatamente estes nomes serão desativados. Exemplo: ndim, ncurtin, nhvac"
+        }
+      }
+    }
+  }
+}
