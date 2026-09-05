@@ -28,7 +28,7 @@
     "step": {
       "init": {
         "title": "Opções de entidades e plataformas",
-        "description": "Escolha as plataformas openHAB a utilizar e, se pretender, desative Items auxiliares ou pouco úteis. As alterações aos filtros são aplicadas automaticamente ao carregar em Enviar.",
+        "description": "Escolha as plataformas openHAB a utilizar. Pode também desativar Items auxiliares ou que não pretende importar. As alterações aos filtros são aplicadas automaticamente ao carregar em Enviar.",
         "data": {
           "binary_sensor": "Ativar sensores binários (Items Contact)",
           "cover": "Ativar estores/cortinas (Items Rollershutter)",
@@ -41,8 +41,8 @@
           "excluded_item_names": "Nomes exatos de Items a desativar"
         },
         "data_description": {
-          "excluded_item_prefixes": "Introduza um ou mais prefixos de nomes de Items openHAB separados por vírgulas. Todos os Items cujo nome comece por um destes valores serão desativados no Home Assistant. Exemplo: `nl_, nt_, nc_`",
-          "excluded_item_names": "Introduza um ou mais nomes exatos de Items openHAB separados por vírgulas. Apenas os Items com exatamente estes nomes serão desativados. Exemplo: `ndim, ncurtin, nhvac`"
+          "excluded_item_prefixes": "Introduza um ou mais prefixos separados por vírgulas. Todos os Items openHAB cujo nome comece por um destes valores serão desativados no Home Assistant. Exemplo: nl_, nt_, nc_",
+          "excluded_item_names": "Introduza um ou mais nomes exatos de Items separados por vírgulas. Apenas os Items openHAB com exatamente estes nomes serão desativados. Exemplo: ndim, ncurtin, nhvac"
         }
       }
     }
