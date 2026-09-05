@@ -4,21 +4,36 @@ from __future__ import annotations
 from .const import CONF_EXCLUDED_ITEM_NAMES, CONF_EXCLUDED_ITEM_PREFIXES
 
 
-def _parse_csv(value: str | None) -> tuple[str, ...]:
-    """Parse a comma-separated option into normalized values."""
+def parse_csv(value: str | None) -> tuple[str, ...]:
+    """Parse a comma-separated option into normalized unique values."""
     if not value:
         return ()
-    return tuple(value.strip().lower() for value in value.split(",") if value.strip())
+
+    values = []
+    seen = set()
+
+    for raw_value in value.split(","):
+        normalized = raw_value.strip().lower()
+        if normalized and normalized not in seen:
+            values.append(normalized)
+            seen.add(normalized)
+
+    return tuple(values)
+
+
+def normalize_csv(value: str | None) -> str:
+    """Return a canonical comma-separated representation."""
+    return ", ".join(parse_csv(value))
 
 
 def prefixes_from_options(options: dict) -> tuple[str, ...]:
     """Return configured item-name prefixes."""
-    return _parse_csv(options.get(CONF_EXCLUDED_ITEM_PREFIXES, ""))
+    return parse_csv(options.get(CONF_EXCLUDED_ITEM_PREFIXES, ""))
 
 
 def names_from_options(options: dict) -> tuple[str, ...]:
     """Return configured exact item names."""
-    return _parse_csv(options.get(CONF_EXCLUDED_ITEM_NAMES, ""))
+    return parse_csv(options.get(CONF_EXCLUDED_ITEM_NAMES, ""))
 
 
 def item_is_excluded(
