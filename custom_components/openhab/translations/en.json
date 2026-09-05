@@ -28,21 +28,21 @@
     "step": {
       "init": {
         "title": "Entity and platform options",
-        "description": "Choose which openHAB platforms are enabled and optionally disable noisy or helper Items. Changes to the filters are applied automatically when you press Submit.",
+        "description": "Choose which openHAB platforms are enabled. You can also disable helper or unwanted Items. Filter changes are applied automatically when you press Submit.",
         "data": {
-          "binary_sensor": "Binary Sensor entities (Contact items) enabled",
-          "cover": "Cover entities (Rollershutter items) enabled",
-          "device_tracker": "Device Tracker entities (Location items) enabled",
-          "light": "Light entities (Color, Dimmer items) enabled",
-          "media_player": "Media Player entities (Player items) enabled",
-          "sensor": "Sensor entities (DateTime, Number, String items) enabled",
-          "switch": "Switch entities (Switch items) enabled",
-          "excluded_item_prefixes": "Item name prefixes to disable",
+          "binary_sensor": "Enable binary sensors (Contact Items)",
+          "cover": "Enable covers (Rollershutter Items)",
+          "device_tracker": "Enable device trackers (Location Items)",
+          "light": "Enable lights (Color and Dimmer Items)",
+          "media_player": "Enable media players (Player Items)",
+          "sensor": "Enable sensors (DateTime, Number and String Items)",
+          "switch": "Enable switches (Switch Items)",
+          "excluded_item_prefixes": "Item-name prefixes to disable",
           "excluded_item_names": "Exact Item names to disable"
         },
         "data_description": {
-          "excluded_item_prefixes": "Enter one or more openHAB Item-name prefixes separated by commas. Every Item whose name starts with one of these values will be disabled in Home Assistant. Example: `nl_, nt_, nc_`",
-          "excluded_item_names": "Enter one or more exact openHAB Item names separated by commas. Only Items with exactly these names will be disabled. Example: `ndim, ncurtin, nhvac`"
+          "excluded_item_prefixes": "Enter one or more prefixes separated by commas. Every openHAB Item whose name starts with one of these values will be disabled in Home Assistant. Example: nl_, nt_, nc_",
+          "excluded_item_names": "Enter one or more exact Item names separated by commas. Only openHAB Items with exactly these names will be disabled. Example: ndim, ncurtin, nhvac"
         }
       }
     }
