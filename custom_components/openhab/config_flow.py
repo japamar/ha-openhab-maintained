@@ -22,6 +22,8 @@ from .const import (
     LOGGER,
     PLATFORMS,
 )
+from .filtering import normalize_csv
+from .registry import async_reconcile_filtered_entities
 from .utils import strip_ip
 
 
@@ -148,7 +150,22 @@ class OpenHABOptionsFlowHandler(config_entries.OptionsFlowWithReload):
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
-            return self.async_create_entry(data=user_input)
+            old_options = dict(self.config_entry.options)
+            new_options = dict(user_input)
+            new_options[CONF_EXCLUDED_ITEM_PREFIXES] = normalize_csv(
+                new_options.get(CONF_EXCLUDED_ITEM_PREFIXES, "")
+            )
+            new_options[CONF_EXCLUDED_ITEM_NAMES] = normalize_csv(
+                new_options.get(CONF_EXCLUDED_ITEM_NAMES, "")
+            )
+
+            await async_reconcile_filtered_entities(
+                self.hass,
+                self.config_entry,
+                old_options,
+                new_options,
+            )
+            return self.async_create_entry(data=new_options)
 
         current = dict(self.config_entry.options)
 
