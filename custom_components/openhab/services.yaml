@@ -1,6 +1,7 @@
 disable_filtered_entities:
   name: Disable filtered entities
   description: >-
-    Disable existing openHAB entities whose item names match the prefixes
-    configured in the integration options. Entities already disabled by the
-    user are left untouched.
+    Advanced recovery action. Disable existing openHAB entities whose Item names
+    match the filters currently configured in the integration options. Normal
+    option changes apply these filters automatically, so this action is usually
+    not required.
